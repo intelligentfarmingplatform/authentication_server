@@ -49,7 +49,7 @@ router.post('/login',async(req,res) => {
     // res.json({
     //   'auth-token':token
     // });
-    res.header('auth-token', token).send({email: user.email,'auth-token': token});
+    res.header('auth-token', token).send({success: true,email: user.email,'auth-token': token});
     
 
 
