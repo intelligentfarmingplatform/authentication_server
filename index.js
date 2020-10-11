@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const db = require("./database/mysql")
 const cors = require("cors");
 var helmet = require('helmet')
 var session = require('express-session')
@@ -18,13 +19,26 @@ const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
 const meRoute = require("./routes/me");
 const userlistsRoute = require("./routes/userlists");
+const userprofileRoute = require("./routes/userprofile");
 dotenv.config();
 
-//connect to db
+db.query(
+  'select * from `tbl_sellproducts',
+  err => {
+    if (err) return console.log(`Failed to mysql DB !!`);
+
+    console.log(`Connected to mysql DB !!`);
+    
+  },
+);
+
+
+
+//connect to mongo db
 mongoose.connect(
-  process.env.DB_CONNECT,
+  process.env.MONGO_DB_CONNECT,
   { useUnifiedTopology: true, useNewUrlParser: true },
-  () => console.log("Connected to DB !!")
+  () => console.log("Connected to MongoDB !!")
 );
 
 app.use(cors());
@@ -36,6 +50,7 @@ app.use("/api/user", authRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/me", meRoute);
 app.use("/api/userlists", userlistsRoute);
+app.use("/api/userprofile", userprofileRoute);
 
 app.listen(process.env.PORT, () =>
   console.log("Server is running on :", process.env.PORT)
