@@ -1,10 +1,15 @@
+const mongoose = require("mongoose");
 const router = require("express").Router();
 const verify = require("./verifyToken");
+const profile = require("../model/User")
 
-router.get("/", verify, (req, res) => {
-  res.json({
-    posts: { title: "test post", description: "this is a description naja" },
+// GET all
+router.get("/",verify, (req, res) => {
+  profile.find().exec((err, data) => {
+    if (err) return res.status(400).send(err);
+    res.status(200).send(data);
   });
 });
+
 
 module.exports = router;

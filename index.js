@@ -20,6 +20,7 @@ const postRoute = require("./routes/posts");
 const meRoute = require("./routes/me");
 const userlistsRoute = require("./routes/userlists");
 const userprofileRoute = require("./routes/userprofile");
+const provincesRoute = require("./routes/provinces");
 dotenv.config();
 
 db.query(
@@ -51,6 +52,7 @@ app.use("/api/posts", postRoute);
 app.use("/api/me", meRoute);
 app.use("/api/userlists", userlistsRoute);
 app.use("/api/userprofile", userprofileRoute);
+app.use("/api/provinces", provincesRoute);
 
 app.listen(process.env.PORT, () =>
   console.log("Server is running on :", process.env.PORT)
