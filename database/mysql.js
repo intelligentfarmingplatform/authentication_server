@@ -2,10 +2,10 @@ const mysql = require("mysql2");
 
 const db = mysql.createPool({
   connectionLimit: 10,
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "farming",
+  host: "ichigozcloud.tk",
+  user: "maeteeps_fsync",
+  password: "26042532",
+  database: "maeteeps_provinces",
 });
 
 module.exports = db;

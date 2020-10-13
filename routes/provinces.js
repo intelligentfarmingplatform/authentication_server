@@ -15,4 +15,21 @@ router.get("/", verify, (req, res) => {
 
 });
 
+router.get("/:id", verify, (req, res) => {
+    const getProvincesByid= 'SELECT * FROM `provinces` WHERE `id`= '+req.params.id
+    db.query(getProvincesByid,(err,rows,field) => {
+        if(err) {
+            console.log("Failed to get Provinces By id")
+            res.sendStatus(500)
+            return
+        }
+        res.json({provinces:rows})
+    })
+
+});
+
+
+
+
+
 module.exports = router;
