@@ -1,11 +1,11 @@
 const mysql = require("mysql2");
 
-const db = mysql.createPool({
+const db2 = mysql.createPool({
   connectionLimit: 10,
   host: "ichigozcloud.tk",
   user: "maeteeps_fsync",
   password: "26042532",
-  database: "maeteep_fsync",
+  database: "maeteeps_provinces",
 });
 
-module.exports = db;
+module.exports = db2;

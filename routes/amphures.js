@@ -3,7 +3,7 @@ const verify = require("./verifyToken");
 const db = require('../database/mysql');
 
 router.get("/", verify, (req, res) => {
-    const getAmphures= "SELECT * FROM `amphures`"
+    const getAmphures= "SELECT `amphoe` FROM `districts`"
     db.query(getAmphures,(err,rows,field) => {
         if(err) {
             console.log("Failed to get Amphures")
@@ -16,7 +16,7 @@ router.get("/", verify, (req, res) => {
 });
 
 router.get("/:id", verify, (req, res) => {
-    const getAmphuresByid= 'SELECT * FROM `amphures` WHERE `province_id`= '+req.params.id
+    const getAmphuresByid= 'SELECT * FROM `districts` WHERE `id`= '+req.params.id
     db.query(getAmphuresByid,(err,rows,field) => {
         if(err) {
             console.log("Failed to get Amphures By id")
