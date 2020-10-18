@@ -1,7 +1,5 @@
 "use strict";
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var router = require("express").Router();
 
 var Product = require("../model/product");
@@ -138,53 +136,58 @@ router.get("/products/:id", function _callee2(req, res) {
   }, null, null, [[0, 7]]);
 }); // put request update a single product
 
-router.put("/products/:id", function _callee3(req, res) {
-  var product;
+router.put("/products/:id", upload.single("productimg"), function _callee3(req, res, next) {
+  var product, blob, blobWriter, publicUrl;
   return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.prev = 0;
-          console.log(req.file);
-          _context3.next = 4;
+          _context3.next = 3;
           return regeneratorRuntime.awrap(Product.findOneAndUpdate({
-            _id: req.params.id
+            id: req.params.id
           }, {
-            $set: _defineProperty({
-              title: req.body.title,
-              price: req.body.price,
-              category: req.body.categoryID,
-              productimg: req.files,
-              description: req.body.description,
-              owner: req.body.ownerID,
-              stockQty: req.body.stockQty
-            }, "price", req.body.price)
-          }, {
+            returnOriginal: false,
             upsert: true
           }));
 
-        case 4:
+        case 3:
           product = _context3.sent;
+          blob = bucket.file(req.file.originalname);
+          blobWriter = blob.createWriteStream({
+            metadata: {
+              contentType: req.file.mimetype
+            }
+          });
+          blobWriter.on("error", function (err) {
+            return next(err);
+          });
+          publicUrl = "https://firebasestorage.googleapis.com/v0/b/".concat(bucket.name, "/o/").concat(encodeURI(blob.name), "?alt=media");
+          console.log(publicUrl);
+          blobWriter.on("finish", function () {
+            (product.title = req.body.title)(product.price = req.body.price)(product.category = req.body.categoryID)(product.productimg = publicUrl)(product.description = req.body.description)(product.owner = req.body.ownerID)(product.stockQty = req.body.stockQty)(product.price = req.body.price);
+            console.log(publicUrl);
+          });
           res.json({
             updatedProduct: product
           });
-          _context3.next = 11;
+          _context3.next = 16;
           break;
 
-        case 8:
-          _context3.prev = 8;
+        case 13:
+          _context3.prev = 13;
           _context3.t0 = _context3["catch"](0);
           res.status(500).json({
             success: false,
             message: _context3.t0.message
           });
 
-        case 11:
+        case 16:
         case "end":
           return _context3.stop();
       }
     }
-  }, null, null, [[0, 8]]);
+  }, null, null, [[0, 13]]);
 }); // delete request delete a single product
 
 module.exports = router;

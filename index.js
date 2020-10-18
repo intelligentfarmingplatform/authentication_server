@@ -39,7 +39,7 @@ db2.query("SELECT * FROM `testconnection`", (err) => {
 //connect to mongo db
 mongoose.connect(
   process.env.MONGO_DB_CONNECT,
-  { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false },
+  { useUnifiedTopology: true, useNewUrlParser: true },
   () => console.log("Connected to MongoDB !!")
 );
 

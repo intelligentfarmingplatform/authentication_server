@@ -96,25 +96,49 @@ router.get("/products/:id", async (req, res) => {
 });
 
 // put request update a single product
-router.put("/products/:id", async (req, res) => {
+router.put("/products/:id",upload.single("productimg"), async (req, res,next) => {
   try {
-    console.log(req.file)
-    let product = await Product.findOneAndUpdate(
-      { _id: req.params.id },
-      {
-        $set: {
-          title: req.body.title,
-          price: req.body.price,
-          category: req.body.categoryID,
-          productimg: req.files,
-          description: req.body.description,
-          owner: req.body.ownerID,
-          stockQty: req.body.stockQty,
-          price: req.body.price
-        }, 
+    console.log(req.file);
+    const product = await Product.findOne({ _id: req.params.id });
+    const blob = bucket.file(req.file.originalname);
+    const blobWriter = blob.createWriteStream({
+      metadata: {
+        contentType: req.file.mimetype,
       },
-      { upsert: true }
-    );
+    });
+
+    blobWriter.on("error", (err) => next(err));
+console.log(product)
+const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
+  bucket.name
+}/o/${encodeURI(blob.name)}?alt=media`;
+         product.title= req.body.title,
+         product.price= req.body.price,
+         product.category= req.body.categoryID,
+         product.productimg= publicUrl,
+         product.description= req.body.description,
+         product.owner= req.body.ownerID,
+         product.stockQty= req.body.stockQty,
+         product.price= req.body.price
+         product.save();
+
+    blobWriter.on("finish",  () => {
+
+      console.log("test")
+
+      //  Product.updateOne({ 
+      //    _id: req.params.id ,
+      //   title: req.body.title,
+      //   price: req.body.price,
+      //   category: req.body.categoryID,
+      //   productimg: publicUrl,
+      //   description: req.body.description,
+      //   owner: req.body.ownerID,
+      //   stockQty: req.body.stockQty,
+      //   price: req.body.price})
+    
+      //    product.save();
+    })
     res.json({
       updatedProduct: product,
     });
