@@ -1,12 +1,14 @@
 const router = require("express").Router();
 const Product = require("../model/product");
-const main = require("../middlewares/upload-img");
 const { Storage } = require("@google-cloud/storage");
 const Multer = require("multer");
 const upload = Multer({
   storage: Multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // keep images size < 5 MB
+},
 });
-
+const bucketName = 'ifp-imgupload.appspot.com';
 const storage = new Storage({
   keyFilename: "ifp-imgupload-firebase-adminsdk-q5dwv-78b9ee228e.json",
 });
@@ -14,7 +16,7 @@ const bucket = storage.bucket("ifp-imgupload.appspot.com");
 // post request - create new Prodducts
 router.post("/products", upload.single("productimg"), (req, res, next) => {
   try {
-    const product = new Product();
+    const products = new Product();
     const blob = bucket.file(req.file.originalname);
 
     // Create writable stream and specifying file mimetype
@@ -32,15 +34,17 @@ router.post("/products", upload.single("productimg"), (req, res, next) => {
     blobWriter.on("error", (err) => next(err));
 
     blobWriter.on("finish", () => {
+      console.log(req.file)
       // Assembling public URL for accessing the file via HTTP
       const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
         bucket.name
       }/o/${encodeURI(blob.name)}?alt=media`;
-      (product.title = req.body.title),
-        (product.decription = req.body.description),
-        (product.productimg = publicUrl),
-        (product.stockQty = req.body.stockQty);
-      product.save();
+      (products.title = req.body.title),
+        (products.decription = req.body.description),
+        (products.productimg = publicUrl),
+        (products.stockQty = req.body.stockQty),
+        (products.filename = req.file.originalname);
+      products.save();
       console.log(publicUrl);
     });
 
@@ -109,36 +113,23 @@ router.put("/products/:id",upload.single("productimg"), async (req, res,next) =>
 
     blobWriter.on("error", (err) => next(err));
 console.log(product)
-const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
-  bucket.name
-}/o/${encodeURI(blob.name)}?alt=media`;
-         product.title= req.body.title,
-         product.price= req.body.price,
-         product.category= req.body.categoryID,
-         product.productimg= publicUrl,
-         product.description= req.body.description,
-         product.owner= req.body.ownerID,
-         product.stockQty= req.body.stockQty,
-         product.price= req.body.price
-         product.save();
+
 
     blobWriter.on("finish",  () => {
-
-      console.log("test")
-
-      //  Product.updateOne({ 
-      //    _id: req.params.id ,
-      //   title: req.body.title,
-      //   price: req.body.price,
-      //   category: req.body.categoryID,
-      //   productimg: publicUrl,
-      //   description: req.body.description,
-      //   owner: req.body.ownerID,
-      //   stockQty: req.body.stockQty,
-      //   price: req.body.price})
-    
-      //    product.save();
+      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
+        bucket.name
+      }/o/${encodeURI(blob.name)}?alt=media`;
+               product.title= req.body.title,
+               product.price= req.body.price,
+               product.category= req.body.categoryID,
+               product.productimg= publicUrl,
+               product.description= req.body.description,
+               product.owner= req.body.ownerID,
+               product.stockQty= req.body.stockQty,
+               product.price= req.body.price
+               product.save();
     })
+    blobWriter.end(req.file.buffer);
     res.json({
       updatedProduct: product,
     });
@@ -151,5 +142,23 @@ const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
 });
 
 // delete request delete a single product
+router.delete("/products/:id",async (req,res)=>{
+  try{
+    const deletedProduct = await Product.findOneAndDelete({ _id: req.params.id });
+    console.log(deletedProduct.filename)
+    if (deletedProduct){
+      await storage.bucket(bucketName).file(deletedProduct.filename).delete();
+      res.json({
+        status:true,
+        message:"Successfully Deleted"
+      });
+    }
+  }catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 
 module.exports = router;
