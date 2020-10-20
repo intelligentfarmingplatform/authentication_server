@@ -84,22 +84,7 @@ var ownerRoute = require("./routes/owner");
 
 app.use("/api", productRoute);
 app.use("/api", categoryRoute);
-app.use("/api", ownerRoute); /////mqtt
-
-var aedes = require('aedes')();
-
-var httpServer = require('http').createServer();
-
-var ws = require('websocket-stream');
-
-var port = 8888;
-ws.createServer({
-  server: httpServer
-}, aedes.handle);
-httpServer.listen(port, function () {
-  console.log('websocket server listening on port ', port);
-}); /////
-
+app.use("/api", ownerRoute);
 app.listen(process.env.PORT, function () {
   return console.log("Server is running on :", process.env.PORT);
 });

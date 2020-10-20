@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const verify = require("./verifyToken");
 const db2 = require("../database/mysql2");
+const mm = require("../middlewares/mqtt")
 
 router.get("/", (req, res) => {
   const getUserprofile = "select * from products";
@@ -35,6 +36,16 @@ router.get("/featured/all", (req, res) => {
     }
     res.json({ products: rows });
   });
+});
+
+
+router.get("/sensor/all", (req, res) => {
+  const getSensorStatus= mm
+  console.log(getSensorStatus)
+  res.json({
+    message: getSensorStatus
+  })
+
 });
 
 module.exports = router;
