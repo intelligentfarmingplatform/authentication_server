@@ -46,6 +46,8 @@ var districtsRoute = require("./routes/districts");
 
 var myproductsRoute = require("./routes/myproducts");
 
+var sensorRoute = require("./routes/sensor");
+
 dotenv.config();
 db2.query("SELECT * FROM `testconnection`", function (err) {
   if (err) return console.log("Failed to mysql DB !!");
@@ -75,6 +77,7 @@ app.use("/api/provinces", provincesRoute);
 app.use("/api/amphures", amphuresRoute);
 app.use("/api/districts", districtsRoute);
 app.use("/api/myproducts", myproductsRoute);
+app.use("/api/sensor", sensorRoute);
 
 var productRoute = require("./routes/product");
 

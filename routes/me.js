@@ -7,7 +7,7 @@ const profile = require("../model/User")
 router.get("/",verify, (req, res) => {
   profile.find().exec((err, data) => {
     if (err) return res.status(400).send(err);
-    res.status(200).send(data);
+    res.status(200).json('users',data);
   });
 });
 

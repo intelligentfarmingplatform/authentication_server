@@ -39,13 +39,6 @@ router.get("/featured/all", (req, res) => {
 });
 
 
-router.get("/sensor/all", (req, res) => {
-  const getSensorStatus= mm
-  console.log(getSensorStatus)
-  res.json({
-    message: getSensorStatus
-  })
 
-});
 
 module.exports = router;

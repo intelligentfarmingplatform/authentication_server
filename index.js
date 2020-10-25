@@ -28,6 +28,7 @@ const provincesRoute = require("./routes/provinces");
 const amphuresRoute = require("./routes/amphures");
 const districtsRoute = require("./routes/districts");
 const myproductsRoute = require("./routes/myproducts");
+const sensorRoute = require("./routes/sensor");
 dotenv.config();
 
 db2.query("SELECT * FROM `testconnection`", (err) => {
@@ -59,6 +60,7 @@ app.use("/api/provinces", provincesRoute);
 app.use("/api/amphures", amphuresRoute);
 app.use("/api/districts", districtsRoute);
 app.use("/api/myproducts", myproductsRoute);
+app.use("/api/sensor", sensorRoute);
 
 const productRoute = require("./routes/product");
 const categoryRoute = require("./routes/category");

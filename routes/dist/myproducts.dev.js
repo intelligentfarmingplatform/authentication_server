@@ -50,11 +50,4 @@ router.get("/featured/all", function (req, res) {
     });
   });
 });
-router.get("/sensor/all", function (req, res) {
-  var getSensorStatus = mm;
-  console.log(getSensorStatus);
-  res.json({
-    message: getSensorStatus
-  });
-});
 module.exports = router;
