@@ -6,13 +6,18 @@ const mongoose = require("mongoose");
 const db2 = require("./database/mysql2");
 const cors = require("cors");
 var helmet = require("helmet");
-//var session = require("express-session");
-const cookieParser = require("cookie-parser");
+var session = require("express-session");
 
 app.set("trust proxy", 1); // trust first proxy
-
+app.use(
+  session({
+    secret: "s3Cur3",
+    name: "sessionId",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 app.use(helmet());
-app.use(cookieParser());
 //Import Routes
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
@@ -37,7 +42,6 @@ mongoose.connect(
   process.env.MONGO_DB_CONNECT,
   { useUnifiedTopology: true, useNewUrlParser: true },
   () => console.log("Connected to MongoDB !!")
- 
 );
 
 app.use(cors());
