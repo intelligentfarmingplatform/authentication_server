@@ -65,9 +65,11 @@ app.use("/api/sensor", sensorRoute);
 const productRoute = require("./routes/product");
 const categoryRoute = require("./routes/category");
 const ownerRoute = require("./routes/owner");
+const addressRoute = require("./routes/address");
 app.use("/api", productRoute);
 app.use("/api", categoryRoute);
 app.use("/api", ownerRoute);
+app.use("/api", addressRoute);
 
 
 
