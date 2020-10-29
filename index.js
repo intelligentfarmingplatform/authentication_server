@@ -7,7 +7,7 @@ const db2 = require("./database/mysql2");
 const cors = require("cors");
 var helmet = require("helmet");
 var session = require("express-session");
-
+dotenv.config();
 app.set("trust proxy", 1); // trust first proxy
 app.use(
   session({
@@ -24,12 +24,12 @@ const postRoute = require("./routes/posts");
 const meRoute = require("./routes/me");
 const userlistsRoute = require("./routes/userlists");
 const userprofileRoute = require("./routes/userprofile");
-const provincesRoute = require("./routes/provinces");
-const amphuresRoute = require("./routes/amphures");
-const districtsRoute = require("./routes/districts");
+// const provincesRoute = require("./routes/provinces");
+// const amphuresRoute = require("./routes/amphures");
+// const districtsRoute = require("./routes/districts");
 const myproductsRoute = require("./routes/myproducts");
-const sensorRoute = require("./routes/sensor");
-dotenv.config();
+// const sensorRoute = require("./routes/sensor");
+
 
 db2.query("SELECT * FROM `testconnection`", (err) => {
   if (err) return console.log(`Failed to mysql DB !!`);
@@ -56,11 +56,11 @@ app.use("/api/posts", postRoute);
 app.use("/api/me", meRoute);
 app.use("/api/userlists", userlistsRoute);
 app.use("/api/userprofile", userprofileRoute);
-app.use("/api/provinces", provincesRoute);
-app.use("/api/amphures", amphuresRoute);
-app.use("/api/districts", districtsRoute);
+// app.use("/api/provinces", provincesRoute);
+// app.use("/api/amphures", amphuresRoute);
+// app.use("/api/districts", districtsRoute);
 app.use("/api/myproducts", myproductsRoute);
-app.use("/api/sensor", sensorRoute);
+// app.use("/api/sensor", sensorRoute);
 
 const productRoute = require("./routes/product");
 const categoryRoute = require("./routes/category");

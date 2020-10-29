@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     min: 13,
   },
   address: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Address",
   },
   date: {
