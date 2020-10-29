@@ -124,7 +124,7 @@ console.log(product)
                product.category= req.body.categoryID,
                product.productimg= publicUrl,
                product.description= req.body.description,
-               product.owner= req.body.ownerID,
+               product.user= req.body.userID,
                product.stockQty= req.body.stockQty,
                product.price= req.body.price
                product.save();
