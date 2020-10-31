@@ -6,9 +6,9 @@ const upload = Multer({
   storage: Multer.memoryStorage(),
   limits: {
     fileSize: 5 * 1024 * 1024, // keep images size < 5 MB
-},
+  },
 });
-const bucketName = 'ifp-imgupload.appspot.com';
+const bucketName = "ifp-imgupload.appspot.com";
 const storage = new Storage({
   keyFilename: "ifp-imgupload-firebase-adminsdk-q5dwv-78b9ee228e.json",
 });
@@ -34,7 +34,7 @@ router.post("/products", upload.single("productimg"), (req, res, next) => {
     blobWriter.on("error", (err) => next(err));
 
     blobWriter.on("finish", () => {
-      console.log(req.file)
+      console.log(req.file);
       // Assembling public URL for accessing the file via HTTP
       const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
         bucket.name
@@ -72,8 +72,9 @@ router.post("/products", upload.single("productimg"), (req, res, next) => {
 // get request get all products
 router.get("/products", async (req, res) => {
   try {
-    let products = await Product.find();
+    let products = await Product.find().populate("users catergory").exec();
     res.json({
+      success: true,
       products: products,
     });
   } catch (err) {
@@ -100,60 +101,65 @@ router.get("/products/:id", async (req, res) => {
 });
 
 // put request update a single product
-router.put("/products/:id",upload.single("productimg"), async (req, res,next) => {
-  try {
-    console.log(req.file);
-    const product = await Product.findOne({ _id: req.params.id });
-    const blob = bucket.file(req.file.originalname);
-    const blobWriter = blob.createWriteStream({
-      metadata: {
-        contentType: req.file.mimetype,
-      },
-    });
+router.put(
+  "/products/:id",
+  upload.single("productimg"),
+  async (req, res, next) => {
+    try {
+      console.log(req.file);
+      const product = await Product.findOne({ _id: req.params.id });
+      const blob = bucket.file(req.file.originalname);
+      const blobWriter = blob.createWriteStream({
+        metadata: {
+          contentType: req.file.mimetype,
+        },
+      });
 
-    blobWriter.on("error", (err) => next(err));
-console.log(product)
+      blobWriter.on("error", (err) => next(err));
+      console.log(product);
 
-
-    blobWriter.on("finish",  () => {
-      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
-        bucket.name
-      }/o/${encodeURI(blob.name)}?alt=media`;
-               product.title= req.body.title,
-               product.price= req.body.price,
-               product.category= req.body.categoryID,
-               product.productimg= publicUrl,
-               product.description= req.body.description,
-               product.user= req.body.userID,
-               product.stockQty= req.body.stockQty,
-               product.price= req.body.price
-               product.save();
-    })
-    blobWriter.end(req.file.buffer);
-    res.json({
-      updatedProduct: product,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-});
-
-// delete request delete a single product
-router.delete("/products/:id",async (req,res)=>{
-  try{
-    const deletedProduct = await Product.findOneAndDelete({ _id: req.params.id });
-    console.log(deletedProduct.filename)
-    if (deletedProduct){
-      await storage.bucket(bucketName).file(deletedProduct.filename).delete();
+      blobWriter.on("finish", () => {
+        const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
+          bucket.name
+        }/o/${encodeURI(blob.name)}?alt=media`;
+        (product.title = req.body.title),
+          (product.price = req.body.price),
+          (product.category = req.body.categoryID),
+          (product.productimg = publicUrl),
+          (product.description = req.body.description),
+          (product.user = req.body.userID),
+          (product.stockQty = req.body.stockQty),
+          (product.price = req.body.price);
+        product.save();
+      });
+      blobWriter.end(req.file.buffer);
       res.json({
-        status:true,
-        message:"Successfully Deleted"
+        updatedProduct: product,
+      });
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: err.message,
       });
     }
-  }catch (err) {
+  }
+);
+
+// delete request delete a single product
+router.delete("/products/:id", async (req, res) => {
+  try {
+    const deletedProduct = await Product.findOneAndDelete({
+      _id: req.params.id,
+    });
+    console.log(deletedProduct.filename);
+    if (deletedProduct) {
+      await storage.bucket(bucketName).file(deletedProduct.filename).delete();
+      res.json({
+        status: true,
+        message: "Successfully Deleted",
+      });
+    }
+  } catch (err) {
     res.status(500).json({
       success: false,
       message: err.message,
