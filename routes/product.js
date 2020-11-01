@@ -72,7 +72,7 @@ router.post("/products", upload.single("productimg"), (req, res, next) => {
 // get request get all products
 router.get("/products", async (req, res) => {
   try {
-    let products = await Product.find().populate("users catergory").exec();
+    let products = await Product.find().populate('users category','-password -email -id_card').exec();
     res.json({
       success: true,
       products: products,
@@ -88,8 +88,11 @@ router.get("/products", async (req, res) => {
 // get request get a single product
 router.get("/products/:id", async (req, res) => {
   try {
-    let product = await Product.findOne({ _id: req.params.id });
+    let product = await Product.findOne({ _id: req.params.id })
+      .populate('users category','-password -email -id_card')
+      .exec();
     res.json({
+      success: true,
       product: product,
     });
   } catch (err) {
