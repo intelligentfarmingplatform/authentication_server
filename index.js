@@ -43,7 +43,7 @@ mongoose.connect(
   { useUnifiedTopology: true, useNewUrlParser: true },
   () => console.log("Connected to MongoDB !!")
 );
-
+mongoose.set('useCreateIndex', true);
 app.use(cors());
 //Middleware
 app.use(morgan("dev"));

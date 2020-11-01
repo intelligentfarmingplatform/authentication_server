@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../model/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const verify = require("./verifyToken");
 const { registerValidation, loginValidation } = require("../validation");
 
 router.post("/register", async (req, res) => {
@@ -54,9 +55,19 @@ router.post("/login", async (req, res) => {
       .json({ success: false, message: "Invalid password !" });
 
   //Create and assign a token
-  const token = jwt.sign({ _id: user._id , email: user.email, username: user.username, CreatedAt: user.createdAt , UpdatedAt: user.UpdatedAt}, process.env.TOKEN_SECRET, {
-    expiresIn: '7d', 
-  });
+  const token = jwt.sign(
+    {
+      _id: user._id,
+      email: user.email,
+      username: user.username,
+      CreatedAt: user.createdAt,
+      UpdatedAt: user.UpdatedAt,
+    },
+    process.env.TOKEN_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
   // res.json({
   //   'auth-token':token
   // });
@@ -65,6 +76,26 @@ router.post("/login", async (req, res) => {
     .json({ success: true, email: user.email, "auth-token": token });
 });
 
-//router.post('/login')
+// PUT API - Update Profile
+router.put("/auth", verify, async (req, res) => {
+  try {
+    let foundUser = await User.findOne({ _id: req.decoded._id });
+    if (foundUser) {
+      if (req.body.username) foundUser.username = req.body.username;
+      if (req.body.email) foundUser.email = req.body.email;
+      if (req.body.password) foundUser.password = req.body.password;
+      await foundUser.save();
+      res.json({
+        success: true,
+        message: "Successfully updated profile",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 
 module.exports = router;
