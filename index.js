@@ -66,10 +66,12 @@ const productRoute = require("./routes/product");
 const categoryRoute = require("./routes/category");
 const ownerRoute = require("./routes/owner");
 const addressRoute = require("./routes/address");
+const paymentRoute = require("./routes/payment");
 app.use("/api", productRoute);
 app.use("/api", categoryRoute);
 app.use("/api", ownerRoute);
 app.use("/api", addressRoute);
+app.use("/api", paymentRoute);
 
 
 

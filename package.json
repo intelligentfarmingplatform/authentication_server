@@ -21,11 +21,13 @@
     "express-session": "^1.17.1",
     "helmet": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
     "mongoose": "^5.10.9",
     "morgan": "^1.10.0",
     "mqtt": "^4.2.1",
     "multer": "^1.4.2",
     "mysql2": "^2.2.5",
+    "stripe": "^8.119.0",
     "uniqid": "^5.2.0",
     "websocket-stream": "^5.5.2"
   },

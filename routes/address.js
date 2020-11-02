@@ -7,7 +7,7 @@ const verify = require("./verifyToken");
 router.post("/addresses", verify, async (req, res) => {
   try {
     let address = new Address();
-    address.user = req.decoded._id;
+    address.users = req.decoded._id;
     address.fullName = req.body.fullName;
     address.streetAddress = req.body.streetAddress;
     address.district = req.body.district;
@@ -48,12 +48,13 @@ router.post("/addresses", verify, async (req, res) => {
 //GET - API Get all addresses
 router.get("/addresses", verify, async (req, res) => {
   try {
-    let addresses = await Address.find({ users: req.decoded._id });
+    const addresses = await Address.find({ "users": req.decoded._id },function(err, item) {
+      console.log(item);
+  });
     if(addresses){
-      console.log(addresses)
       res.json({
         success: true,
-        addresses: addresses
+        address: addresses,
       });
     }
 
