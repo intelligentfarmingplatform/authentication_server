@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const moment = require("moment");
-const stripe = require("stripe");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const verify = require("./verifyToken");
 const Order = require("../model/order");
 
@@ -33,7 +33,7 @@ router.post("/shipment", (req, res) => {
   });
 });
 
-router.post("/payment", (req, res) => {
+router.post("/payment", verify,(req, res) => {
   let totalPrice = Math.round(req.body.totalPrice * 100);
   stripe.customers
     .create({
@@ -65,6 +65,10 @@ router.post("/payment", (req, res) => {
       order.owner = req.decoded._id;
       order.estimatedDelivery = req.body.estimatedDelivery;
       await order.save();
+      res.json({
+        success:true,
+        message:"Successfully made a payment"
+      })
     })
     .catch((err) => {
       res.status(500).json({
