@@ -68,12 +68,12 @@ router.post("/payment", verify,(req, res) => {
       order.owner = req.decoded._id;
       order.estimatedDelivery = req.body.estimatedDelivery;
       await order.save();
-      const saveOrderToMysql = "insert into `tbl_orders` (nameuser,addressuser,teluser,list_order,totalpice_order,status_order,createdAt,serial_number) values ($`order.owner`,$`order.owner.address`,$`order.owner.phoneNumber`,$`this.cart`,$`this.price`,'Order',NOW(),'ifp_2020')";
-      await db.query(saveOrderToMysql, (err, result) => {
-res.json({
-  message:"Successfully added to mysql"
-})
-      })
+//       const saveOrderToMysql = "insert into `tbl_orders` (nameuser,addressuser,teluser,list_order,totalpice_order,status_order,createdAt,serial_number) values ($`order.owner`,$`order.owner.address`,$`order.owner.phoneNumber`,$`this.cart`,$`this.price`,'Order',NOW(),'ifp_2020')";
+//       await db.query(saveOrderToMysql, (err, result) => {
+// res.json({
+//   message:"Successfully added to mysql"
+// })
+//       })
       res.json({
         success:true,
         message:"Successfully made a payment"
