@@ -56,6 +56,7 @@ router.post("/payment", verify,(req, res) => {
       let cart = req.body.cart;
 
       cart.map((product) => {
+        console.log('this is from cat map',product)
         order.product.push({
           productID: product._id,
           quantity: parseInt(product.quantity),
