@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/storage": "^5.3.0",
+    "@google-cloud/storage": "^5.4.0",
     "@hapi/joi": "^17.1.1",
     "aedes": "^0.43.0",
     "bcryptjs": "^2.4.3",
@@ -19,12 +19,12 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "helmet": "^4.1.1",
+    "helmet": "^4.2.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
-    "mongoose": "^5.10.9",
+    "mongoose": "^5.10.11",
     "morgan": "^1.10.0",
-    "mqtt": "^4.2.1",
+    "mqtt": "^4.2.4",
     "multer": "^1.4.2",
     "mysql2": "^2.2.5",
     "stripe": "^8.119.0",
@@ -32,7 +32,7 @@
     "websocket-stream": "^5.5.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4",
-    "snyk": "^1.413.2"
+    "nodemon": "^2.0.6",
+    "snyk": "^1.422.0"
   }
 }
