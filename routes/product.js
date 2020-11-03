@@ -40,7 +40,9 @@ router.post("/products", upload.single("productimg"), (req, res, next) => {
         bucket.name
       }/o/${encodeURI(blob.name)}?alt=media`;
       (products.title = req.body.title),
-        (products.decription = req.body.description),
+        (products.description = req.body.description),
+        (products.category = '5f8ad5d65cabe33eec64feec'),
+        (products.users = '5f8308619948c342b8393099') 
         (products.productimg = publicUrl),
         (products.stockQty = req.body.stockQty),
         (products.filename = req.file.originalname);
@@ -130,7 +132,7 @@ router.put(
           (product.category = req.body.categoryID),
           (product.productimg = publicUrl),
           (product.description = req.body.description),
-          (product.user = req.body.userID),
+          (product.users = req.body.userID),
           (product.stockQty = req.body.stockQty),
           (product.price = req.body.price);
         product.save();
