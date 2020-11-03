@@ -3,6 +3,8 @@ const moment = require("moment");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const verify = require("./verifyToken");
 const Order = require("../model/order");
+//My SQL
+const db = require("../database/mysql");
 
 const SHIPMENT = {
   normal: {
@@ -66,6 +68,12 @@ router.post("/payment", verify,(req, res) => {
       order.owner = req.decoded._id;
       order.estimatedDelivery = req.body.estimatedDelivery;
       await order.save();
+      const saveOrderToMysql = "insert into `tbl_orders` (nameuser,addressuser,teluser,list_order,totalpice_order,status_order,createdAt,serial_number) values ($`order.owner`,$`order.owner.address`,$`order.owner.phoneNumber`,$`this.cart`,$`this.price`,'Order',NOW(),'ifp_2020')";
+      db.query(saveOrderToMysql, (err, result) => {
+res.json({
+  message:"Successfully added to mysql"
+})
+      })
       res.json({
         success:true,
         message:"Successfully made a payment"
