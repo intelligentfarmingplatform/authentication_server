@@ -45,6 +45,7 @@ router.post("/products", upload.single("productimg"), (req, res, next) => {
         (products.users = '5f8308619948c342b8393099'), 
         (products.productimg = publicUrl),
         (products.stockQty = req.body.stockQty),
+        (products.price = req.body.price),
         (products.filename = req.file.originalname);
       products.save();
       console.log(publicUrl);
